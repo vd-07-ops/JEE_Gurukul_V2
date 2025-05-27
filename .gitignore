@@ -1,0 +1,58 @@
+# Python bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+env/
+.venv/
+.env/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Logs and debug files
+*.log
+*.out
+*.err
+*.bak
+*.swp
+
+# VS Code settings
+.vscode/
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Pytest cache
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Model & experiment files
+*.ckpt
+*.pth
+*.pt
+*.onnx
+*.h5
+*.tflite
+*.pkl
+
+# HuggingFace cache
+.cache/
+datasets/
+
+# PDF / Image outputs
+data/raw_pdfs/
+data/images/
+
+# JSON / intermediate artifacts
+processed_json/
+*.jsonl
+
+# Secrets and configs
+*.env
+secrets.yaml
+config.yaml
