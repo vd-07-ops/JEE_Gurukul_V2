@@ -45,6 +45,7 @@ htmlcov/
 datasets/
 
 # PDF / Image outputs
+data/
 data/raw_pdfs/
 data/images/
 

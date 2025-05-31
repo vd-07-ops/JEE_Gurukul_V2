@@ -1,0 +1,14 @@
+google-generativeai
+google-genai
+google-adk
+litellm
+ollama
+chromadb
+sentence-transformers
+requests
+beautifulsoup4
+fastapi 
+uvicorn
+SQLAlchemy
+pydantic
+typing_extensions
