@@ -40,6 +40,8 @@ htmlcov/
 *.tflite
 *.pkl
 
+jee_question_generator_log.txt
+
 # HuggingFace cache
 .cache/
 datasets/
@@ -57,3 +59,11 @@ processed_json/
 *.env
 secrets.yaml
 config.yaml
+
+generated_jee_questions.json
+generated_jee_questions.csv
+*.csv
+test.py
+
+
+models/

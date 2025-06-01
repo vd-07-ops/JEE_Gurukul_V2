@@ -1,0 +1,7 @@
+faiss-cpu
+sentence-transformers
+tqdm
+ollama
+huggingface_hub
+langchain
+pandas
