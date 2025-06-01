@@ -62,7 +62,9 @@ config.yaml
 
 generated_jee_questions.json
 generated_jee_questions.csv
-*.csv
+failed_generations.csv
+generated_questions.csv
+
 test.py
 
 
