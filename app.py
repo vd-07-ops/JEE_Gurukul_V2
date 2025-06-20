@@ -25,6 +25,7 @@ import time
 import signal
 from concurrent.futures import ThreadPoolExecutor, TimeoutError as ThreadTimeoutError
 from flask_cors import CORS
+import click
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -733,17 +734,21 @@ def not_found(e):
 
 @app.errorhandler(500)
 def server_error(e):
+    logger.error(f'Server Error: {e}', exc_info=True)
     return render_template('500.html'), 500
+
+@app.cli.command("init-db")
+def init_db_command():
+    """Drops and creates all tables."""
+    db.drop_all()
+    db.create_all()
+    print("Database initialized.")
 
 CORS(app, supports_credentials=True)
 
-# === TEMPORARY: Migration route for Render free tier (REMOVE after use!) ===
-@app.route('/run-migrations')
-def run_migrations():
-    upgrade()
-    return "Migrations complete! (Remove this route after use)"
-
 if __name__ == '__main__':
+    # Load original questions on startup
+    load_original_questions()
     with app.app_context():
         db.create_all()
     app.run(debug=False, host='0.0.0.0', port=5000) 
