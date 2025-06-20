@@ -10,8 +10,7 @@ from flask import Flask, render_template, request, jsonify, redirect, url_for, f
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
-import google.generativeai as genai
-from google.generativeai import types
+import google.genai as genai
 from google.cloud import storage
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import Flow
