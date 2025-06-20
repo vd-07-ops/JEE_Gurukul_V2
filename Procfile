@@ -1,1 +1,1 @@
-web: python run_migrations.py && gunicorn app:app 
+web: gunicorn app:app 

@@ -62,6 +62,21 @@ migrate = Migrate(app, db)
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 
+# --- Direct Database Initialization on Startup ---
+# This code runs once when the application starts.
+# It's the most reliable way to ensure the database is ready.
+with app.app_context():
+    from sqlalchemy import inspect
+    inspector = inspect(db.engine)
+    logger.info("Checking for database tables...")
+    if not inspector.has_table("user"):
+        logger.info("Database tables not found, creating them now...")
+        db.create_all()
+        logger.info("Database tables created successfully.")
+    else:
+        logger.info("Database tables already exist.")
+# --- End Initialization ---
+
 # Google OAuth2 configuration
 GOOGLE_CLIENT_CONFIG = {
     "web": {
