@@ -10,8 +10,8 @@ from flask import Flask, render_template, request, jsonify, redirect, url_for, f
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
-from google import genai
-from google.genai import types
+import google.generativeai as genai
+from google.generativeai import types
 from google.cloud import storage
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import Flow
@@ -52,7 +52,8 @@ os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'your-secret-key-here')
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///jee_gurukul.db'
+# Use DATABASE_URL from environment if available, otherwise fall back to SQLite
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'sqlite:///jee_gurukul.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Initialize extensions
