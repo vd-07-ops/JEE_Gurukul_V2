@@ -1,71 +1,169 @@
-# Python bytecode
+# User data
+data/user_data/
+
+# Generated questions
+data/questions/generated_questions_*.json
+
+# Environment variables
+.env
+*.json
+# Python
 __pycache__/
 *.py[cod]
 *$py.class
 
-# Virtual environments
-venv/
-env/
-.venv/
-.env/
+# C extensions
+*.so
 
-# Jupyter Notebook checkpoints
-.ipynb_checkpoints/
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
 
-# Logs and debug files
+# PyInstaller
+#  Usually these files are written by a python script from a template
+#  before PyInstaller builds the exe, so as to inject date/other infos into it.
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+
+# Translations
+*.mo
+*.pot
+
+# Django stuff:
 *.log
-*.out
-*.err
-*.bak
-*.swp
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
 
-# VS Code settings
+# Flask stuff:
+instance/
+.webassets-cache
+
+# Scrapy stuff:
+.scrapy
+
+# Sphinx documentation
+docs/_build/
+
+# PyBuilder
+target/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# IPython
+profile_default/
+ipython_config.py
+
+# PEP 582; PEP 582 is PEP-ilicious!
+__pypackages__/
+
+# Celery stuff
+celerybeat-schedule
+celerybeat.pid
+
+# SageMath parsed files
+*.sage.py
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Spyder project settings
+.spyderproject
+.spyproject
+
+# Rope project settings
+.ropeproject
+
+# mkdocs documentation
+/site
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre type checker
+.pyre/
+
+# pytype static type analyzer
+.pyre/
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+.idea
+*.DS_Store
+/instance
+/jee_gurukul.db
+/jee_gurukul.db-journal
+migrations/versions/
 .vscode/
 
-# System files
+# Ignore all .pyc files
+**/*.pyc
+# Ignore all __pycache__ directories
+**/__pycache__/
+# Ignore the .vscode directory
+.vscode/
+# Ignore virtual environment directories
+venv/
+.venv/
+# Ignore the local database file
+instance/
+# Ignore the .env file
+.env
+# Ignore Flask-Migrate versions
+migrations/versions/
+# Ignore system-specific files
 .DS_Store
-Thumbs.db
+# Ignore logs
+*.log
 
-# Pytest cache
-.pytest_cache/
-.coverage
-htmlcov/
-
-# Model & experiment files
-*.ckpt
-*.pth
-*.pt
-*.onnx
-*.h5
-*.tflite
-*.pkl
-
-jee_question_generator_log.txt
-
-# HuggingFace cache
-.cache/
-datasets/
-
-# PDF / Image outputs
-data/
-data/raw_pdfs/
-data/images/
-
-# JSON / intermediate artifacts
-processed_json/
-*.jsonl
-
-# Secrets and configs
-*.env
-secrets.yaml
-config.yaml
-
-generated_jee_questions.json
-generated_jee_questions.csv
-failed_generations.csv
-generated_questions.csv
-
-test.py
-
-
-models/
+# Ignore sensitive files
+google_cloud_service_account.json

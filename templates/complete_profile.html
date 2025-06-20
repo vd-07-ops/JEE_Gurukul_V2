@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}Complete Profile - JEE Gurukul{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card shadow-sm p-4 mt-5">
+                <h2 class="mb-4 text-center text-primary">Complete Your Profile</h2>
+                <form method="POST" action="{{ url_for('complete_profile') }}">
+                    <div class="mb-3">
+                        <label for="full_name" class="form-label">Full Name</label>
+                        <input type="text" class="form-control" id="full_name" name="full_name" value="{{ current_user.full_name }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="dob" class="form-label">Date of Birth</label>
+                        <input type="date" class="form-control" id="dob" name="dob" value="{{ current_user.date_of_birth }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="mobile_number" class="form-label">Mobile Number</label>
+                        <input type="text" class="form-control" id="mobile_number" name="mobile_number" value="{{ current_user.mobile_number }}" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Save Profile</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+document.querySelector('form').addEventListener('submit', function(e) {
+    const mobileNumber = document.getElementById('mobile_number').value;
+    const dob = document.getElementById('dob').value;
+    
+    // Validate mobile number
+    if (!/^[0-9]{10}$/.test(mobileNumber)) {
+        e.preventDefault();
+        alert('Please enter a valid 10-digit mobile number!');
+        return;
+    }
+    
+    // Validate date of birth (must be at least 13 years old)
+    const today = new Date();
+    const birthDate = new Date(dob);
+    const age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+    
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+        age--;
+    }
+    
+    if (age < 13) {
+        e.preventDefault();
+        alert('You must be at least 13 years old to register!');
+    }
+});
+</script>
+{% endblock %}
+{% endblock %} 

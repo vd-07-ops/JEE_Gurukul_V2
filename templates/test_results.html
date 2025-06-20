@@ -1,0 +1,241 @@
+{% extends "base.html" %}
+
+{% block title %}Test Results - JEE Gurukul{% endblock %}
+
+{% block extra_css %}
+<!-- MathJax Configuration -->
+<script>
+window.MathJax = {
+    tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true,
+        processEnvironments: true
+    },
+    options: {
+        ignoreHtmlClass: 'tex2jax_ignore',
+        processHtmlClass: 'tex2jax_process'
+    }
+};
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+<style>
+    .score-card {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-radius: 15px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+    }
+    
+    .score-circle {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        font-weight: bold;
+        margin: 0 auto 1rem;
+    }
+    
+    .question-result {
+        border-left: 4px solid #dee2e6;
+        padding-left: 1rem;
+        margin-bottom: 1rem;
+    }
+    
+    .question-result.correct {
+        border-left-color: #28a745;
+        background-color: #f8fff9;
+    }
+    
+    .question-result.incorrect {
+        border-left-color: #dc3545;
+        background-color: #fff8f8;
+    }
+    
+    .question-result.unanswered {
+        border-left-color: #ffc107;
+        background-color: #fffdf5;
+    }
+    
+    .answer-comparison {
+        display: flex;
+        gap: 1rem;
+        margin-top: 0.5rem;
+    }
+    
+    .answer-box {
+        flex: 1;
+        padding: 0.5rem;
+        border-radius: 5px;
+        font-weight: 500;
+    }
+    
+    .user-answer {
+        background-color: #e3f2fd;
+        border: 1px solid #2196f3;
+    }
+    
+    .correct-answer {
+        background-color: #e8f5e8;
+        border: 1px solid #4caf50;
+    }
+    
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+    
+    .stat-card {
+        background: white;
+        padding: 1rem;
+        border-radius: 10px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        text-align: center;
+    }
+    
+    .stat-number {
+        font-size: 2rem;
+        font-weight: bold;
+        color: var(--primary-color);
+    }
+    
+    .question-text {
+        font-size: 1.1rem;
+        line-height: 1.6;
+        margin-bottom: 1rem;
+    }
+    
+    .difficulty-badge {
+        font-size: 0.8rem;
+        padding: 0.25rem 0.5rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+                    <li class="breadcrumb-item active">Test Results</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-8">
+            <!-- Score Card -->
+            <div class="score-card mb-4 p-4 bg-primary text-white rounded shadow-sm">
+                <div class="d-flex align-items-center">
+                    <div class="display-4 fw-bold me-4">{{ test.score }}</div>
+                    <div>
+                        <h4 class="mb-1">{{ test.subject|title }} - {{ test.topic|title }}</h4>
+                        <div>Score (JEE): <b>+4</b> correct, <b>0</b> unattempted, <b>-1</b> incorrect</div>
+                        <div>Total: <b>{{ test.questions|length }}</b> | Correct: <b>{{ test.questions|selectattr('is_correct', 'equalto', True)|list|length }}</b> | Incorrect: <b>{{ test.questions|selectattr('is_correct', 'equalto', False)|list|length }}</b> | Unattempted: <b>{{ test.questions|selectattr('is_correct', 'none')|list|length }}</b></div>
+                        <div>Time Taken: <b>{{ test.time_taken }} seconds</b></div>
+                    </div>
+                </div>
+            </div>
+            <!-- Question Results -->
+            <div class="card">
+                <div class="card-header bg-light">
+                    <h4 class="mb-0">Questions & Answers</h4>
+                </div>
+                <div class="card-body">
+                    {% for q in test.questions %}
+                        <div class="mb-4 p-3 border rounded">
+                            <h5>Question {{ loop.index }}</h5>
+                            <p>{{ q.question_text }}</p>
+                            <div class="mb-2">
+                                <span class="badge bg-secondary">Your Answer: {{ q.user_answer if q.user_answer else 'Unattempted' }}</span>
+                                <span class="badge bg-success">Correct Answer: {{ q.correct_answer }}</span>
+                                {% if q.is_correct is none %}
+                                    <span class="badge bg-warning text-dark">Unattempted (0 marks)</span>
+                                {% elif q.is_correct %}
+                                    <span class="badge bg-success">Correct (+4)</span>
+                                {% else %}
+                                    <span class="badge bg-danger">Incorrect (-1)</span>
+                                {% endif %}
+                            </div>
+                            <div class="mt-2">
+                                <b>Step-by-step Solution:</b>
+                                <div class="alert alert-info mt-1">{{ q.solution or 'No solution available.' }}</div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <!-- Action Buttons -->
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Actions</h5>
+                    <div class="d-grid gap-2">
+                        <a href="{{ url_for('start_test', subject=test.subject, topic=test.topic) }}" class="btn btn-primary">
+                            <i class="fas fa-redo"></i> Retake Test
+                        </a>
+                        <a href="{{ url_for('subject_topics', subject=test.subject) }}" class="btn btn-outline-primary">
+                            <i class="fas fa-list"></i> More Topics
+                        </a>
+                        <a href="{{ url_for('dashboard') }}" class="btn btn-outline-secondary">
+                            <i class="fas fa-home"></i> Dashboard
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <!-- Performance Insights -->
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Performance Insights</h5>
+                    {% set max_score = test.questions|length * 4 %}
+                    {% set percentage = (test.score / max_score) * 100 if max_score > 0 else 0 %}
+
+                    {% if percentage >= 80 %}
+                        <div class="alert alert-success">
+                            <i class="fas fa-star"></i>
+                            <strong>Excellent!</strong> You have a strong understanding of this topic.
+                        </div>
+                    {% elif percentage >= 50 %}
+                        <div class="alert alert-info">
+                            <i class="fas fa-thumbs-up"></i>
+                            <strong>Average.</strong> You're on the right track, but there's room for improvement. Keep practicing!
+                        </div>
+                    {% else %}
+                        <div class="alert alert-danger">
+                            <i class="fas fa-book"></i>
+                            <strong>Needs Improvement.</strong> Focus on understanding the fundamentals.
+                        </div>
+                    {% endif %}
+                    <p class="mb-0">
+                        <small class="text-muted">
+                            Tip: Review the questions you got wrong and understand the correct solutions.
+                        </small>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Render MathJax after page loads
+    if (window.MathJax) {
+        MathJax.typesetPromise();
+    }
+});
+</script>
+{% endblock %} 

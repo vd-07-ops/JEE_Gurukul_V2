@@ -1,0 +1,248 @@
+{% extends "base.html" %}
+
+{% block title %}{{ subject|title }} - {{ topic|title }} Test - JEE Gurukul{% endblock %}
+
+{% block extra_css %}
+<!-- MathJax Configuration -->
+<script>
+window.MathJax = {
+    tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true,
+        processEnvironments: true
+    },
+    options: {
+        ignoreHtmlClass: 'tex2jax_ignore',
+        processHtmlClass: 'tex2jax_process'
+    }
+};
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+<style>
+    .timer {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: var(--primary-color);
+    }
+    
+    .question-container {
+        display: none;
+        margin-bottom: 120px; /* Add space for fixed action buttons */
+    }
+    
+    .question-container.active {
+        display: block;
+    }
+    
+    .option-btn {
+        width: 100%;
+        text-align: left;
+        margin-bottom: 10px;
+        padding: 15px;
+        border: 2px solid #dee2e6;
+        border-radius: 8px;
+        background: white;
+        transition: all 0.2s;
+    }
+    
+    .option-btn:hover {
+        border-color: var(--primary-color);
+        background: #f8f9fa;
+    }
+    
+    .option-btn.selected {
+        border-color: var(--primary-color);
+        background: #e3f2fd;
+    }
+    
+    .action-buttons {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: white;
+        padding: 1rem;
+        box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+        z-index: 1000;
+    }
+    
+    .modal-content {
+        border-radius: 15px;
+    }
+    
+    .modal-header {
+        border-radius: 15px 15px 0 0;
+    }
+    
+    .question-nav-btn {
+        width: 40px;
+        height: 40px;
+        margin: 2px;
+    }
+    
+    .question-nav-btn.answered {
+        background-color: #28a745;
+        color: white;
+    }
+    
+    .question-actions {
+        margin-top: 2rem;
+        padding: 1rem;
+        background: #f8f9fa;
+        border-radius: 8px;
+        border: 1px solid #dee2e6;
+    }
+    
+    .question-text {
+        font-size: 1.1rem;
+        line-height: 1.6;
+        margin-bottom: 1.5rem;
+    }
+    
+    .loading-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(255, 255, 255, 0.9);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+    }
+    
+    .retry-btn {
+        margin-top: 1rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a href="{{ url_for('subject_topics', subject=subject) }}">{{ subject|title }}</a></li>
+                    <li class="breadcrumb-item active">{{ topic|title }}</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h3>{{ subject|title }} - {{ topic|title }}</h3>
+                        <div class="timer" id="timer">20:00</div>
+                    </div>
+                    
+                    <div id="question-container">
+                        <!-- Questions will be loaded here -->
+                        <div class="text-center">
+                            <div class="spinner-border" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <p class="mt-2">Generating questions, please wait...</p>
+                            <p class="text-muted">This may take up to 2 minutes for the first attempt</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Question Navigation</h5>
+                    <div class="d-flex flex-wrap gap-2" id="question-nav">
+                        <!-- Question numbers will be added here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="action-buttons">
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <button class="btn btn-primary" id="prev-btn" disabled>Previous</button>
+                <button class="btn btn-primary" id="next-btn">Next</button>
+                <button class="btn btn-success float-end" id="submit-btn" style="display: none;">Submit Test</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Loading Overlay -->
+<div class="loading-overlay" id="loading-overlay" style="display: none;">
+    <div class="text-center">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+        <p class="mt-2">Processing...</p>
+    </div>
+</div>
+
+<!-- Hint Modal -->
+<div class="modal fade" id="hintModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Hint</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="hint-content">
+                Loading hint...
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Solution Modal -->
+<div class="modal fade" id="solutionModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Solution</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="solution-content">
+                Loading solution...
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Concept Clarity Modal -->
+<div class="modal fade" id="conceptModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Concept Clarity</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="concept-content">
+                Loading concept explanation...
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+window.subject = {{ subject|tojson }};
+window.topic = {{ topic|tojson }};
+</script>
+<script src="{{ url_for('static', filename='js/test.js') }}"></script>
+{% endblock %} 

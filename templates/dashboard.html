@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - JEE Gurukul{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm p-4 mb-4">
+                <h2 class="mb-4 text-primary">Welcome, {{ current_user.full_name or current_user.email }}!</h2>
+                <p class="lead">Select a subject to start practicing JEE questions:</p>
+                <div class="d-flex flex-wrap gap-3 mt-4">
+                    <a href="{{ url_for('subject_topics', subject='physics') }}" class="btn btn-lg btn-outline-primary flex-fill">Physics</a>
+                    <a href="{{ url_for('subject_topics', subject='chemistry') }}" class="btn btn-lg btn-outline-primary flex-fill">Chemistry</a>
+                    <a href="{{ url_for('subject_topics', subject='mathematics') }}" class="btn btn-lg btn-outline-primary flex-fill">Mathematics</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    {% if current_user.test_history %}
+    <div class="row mt-5">
+        <div class="col">
+            <h3>Recent Activity</h3>
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Subject</th>
+                            <th>Topic</th>
+                            <th>Score</th>
+                            <th>Date</th>
+                            <th>View Results</th>
+                            <th>Completion Status</th>
+                            <th>Average Difficulty</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for test in current_user.test_history[:5] %}
+                        <tr>
+                            <td>{{ test.subject }}</td>
+                            <td>{{ test.topic }}</td>
+                            <td>{{ test.score }}%</td>
+                            <td>{{ test.completed_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                            <td>
+                                <a href="{{ url_for('test_results', test_id=test.id) }}" class="btn btn-sm btn-outline-primary">View Results</a>
+                            </td>
+                            <td>
+                                {% if test.score is not none %}
+                                    <span class="badge bg-success">Completed</span>
+                                {% else %}
+                                    <span class="badge bg-warning text-dark">Not Completed</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if test.questions and test.questions[0].difficulty %}
+                                    {{ test.questions[0].difficulty|title }}
+                                {% else %}
+                                    Medium
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Auto-refresh Recent Activity table every 10 seconds if on dashboard
+if (window.location.pathname === '/dashboard') {
+    setInterval(() => {
+        fetch(window.location.href, {cache: 'reload'})
+            .then(response => response.text())
+            .then(html => {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                const newTable = doc.querySelector('.table-responsive');
+                const oldTable = document.querySelector('.table-responsive');
+                if (newTable && oldTable) {
+                    oldTable.innerHTML = newTable.innerHTML;
+                }
+            });
+    }, 10000);
+}
+</script>
+{% endblock %} 
