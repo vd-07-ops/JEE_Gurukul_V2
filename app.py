@@ -15,7 +15,7 @@ from google.cloud import storage
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import Flow
 from google.auth.transport.requests import Request
-from flask_migrate import Migrate
+from flask_migrate import Migrate, upgrade
 import re
 from pydantic import BaseModel
 from typing import List, Optional
@@ -736,6 +736,12 @@ def server_error(e):
     return render_template('500.html'), 500
 
 CORS(app, supports_credentials=True)
+
+# === TEMPORARY: Migration route for Render free tier (REMOVE after use!) ===
+@app.route('/run-migrations')
+def run_migrations():
+    upgrade()
+    return "Migrations complete! (Remove this route after use)"
 
 if __name__ == '__main__':
     with app.app_context():
