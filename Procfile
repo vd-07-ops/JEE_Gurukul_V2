@@ -1,1 +1,1 @@
-web: python -c 'from app import app, db; app.app_context().push(); db.create_all()' && gunicorn app:app 
+web: python run_migrations.py && gunicorn app:app 
