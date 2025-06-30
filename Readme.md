@@ -47,44 +47,4 @@ JEE Gurukul is a comprehensive AI-powered platform that helps JEE aspirants prep
 
 
 
-## 🚀 Quick Start
-
-### Prerequisites
-- Python 3.11+
-- Google Cloud Project
-- Google Gemini API Key
-- Google OAuth Credentials
-
-### Installation
-
-1. **Clone the repository**
-   ```bash
-   git clone <repository-url>
-   cd JEE-Gurukul
-   ```
-
-2. **Install dependencies**
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-3. **Set up environment variables**
-   ```bash
-   # Create .env file
-   GOOGLE_API_KEY=your_gemini_api_key
-   GOOGLE_CLIENT_ID=your_google_oauth_client_id
-   GOOGLE_CLIENT_SECRET=your_google_oauth_client_secret
-   GOOGLE_REDIRECT_URI=http://localhost:5000/google-callback
-   GOOGLE_CLOUD_PROJECT=your_gcp_project_id
-   GCS_BUCKET_NAME=jee_gurukul
-   SECRET_KEY=your_secret_key_here
-   ```
-
-4. **Run the application**
-   ```bash
-   python app.py
-   ```
-
----
-
 **🎯 JEE Gurukul - Empowering JEE aspirants with AI-powered learning!** 🚀
