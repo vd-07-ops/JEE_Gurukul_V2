@@ -1,7 +1,7 @@
 ﻿# JEE Gurukul - AI-Powered JEE Preparation Platform
 
+▶️ [Watch Demo Video on Loom](https://www.loom.com/share/6ec910a6e64b44cbaa56e9ba4e38ff13?sid=66933d19-1d37-41cf-9645-f7530d563dd1)
 
- <div style="position: relative; padding-bottom: 56.25%; height: 0;"><iframe src="https://www.loom.com/embed/6ec910a6e64b44cbaa56e9ba4e38ff13?sid=66933d19-1d37-41cf-9645-f7530d563dd1" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></iframe></div>
 
 ## 🎯 Overview
 
