@@ -7,7 +7,7 @@ JEE Gurukul is a comprehensive AI-powered platform that helps JEE aspirants prep
 ## ✨ Features
 
 ### 🧠 AI-Powered Question Generation
-- **Content-Based Questions**: Questions generated from authentic MMD study materials
+- **Content-Based Questions**: Questions generated from authentic NCERT study materials
 - **JEE-Level Difficulty**: Questions matching actual JEE standards
 - **Multiple Subjects**: Mathematics, Physics, and Chemistry
 - **Topic-Specific**: Questions tailored to specific topics and concepts
